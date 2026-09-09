@@ -2,11 +2,12 @@
 <main>
   <h1><%= title %></h1>
   <h2>Upcoming Service Projects</h2>
-  <ul>
+
+  <nav>
   <% projects.forEach(project => { %>
-    <li>
-    <%= project.date.getDate() %>/<%= project.date.getMonth() + 1 %>/<%= project.date.getFullYear() %> <%= project.date.getHours() %>h: <%= project.title %> (<%= project.organization_name %>)</li>
+    <div class="project-item">
+    <span><%= project.date.getDate() %>/<%= project.date.getMonth() + 1 %>/<%= project.date.getFullYear() %> <%= project.date.getHours() %>h</span> <strong><span><%= project.title %> </span></strong><span>(<%= project.organization_name %>)</span></div>
     <% }) %>
-  </ul>
+  </nav>
 </main>
 <%- include('partials/footer') %>

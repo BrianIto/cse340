@@ -12,6 +12,11 @@ body {
   main {
     flex: 1;
     padding: 24px 64px;
+    .project-item {
+      padding: 8px 0;
+      display: grid;
+      grid-template-columns: 0.3fr 0.5fr 1fr;
+    }
   }
   footer {
     display: flex;
