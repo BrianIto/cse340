@@ -146,3 +146,50 @@ INSERT INTO service_project (
     'UnityServe Community Hall',
     '2026-12-12 08:00:00'
 );
+
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+);
+
+CREATE TABLE category_project (
+	category_project_id SERIAL PRIMARY KEY,
+	category_id INT REFERENCES category(category_id)
+	project_id INT REFERENCES service_project(project_id)
+)
+
+INSERT INTO category (name) VALUES 
+	('Construction & Infrastructure'), 
+	('Environment & Susteinability'), 
+	('Community Support & Outreach');
+
+INSERT INTO category_project (project_id, category_id) VALUES
+-- Construction & Infrastructure
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+
+-- Environment & Sustainability
+(2, 2),
+(6, 2),
+(7, 2),
+(8, 2),
+(9, 2),
+(10, 2),
+(12, 2),
+
+-- Community Support & Outreach
+(1, 3),
+(3, 3),
+(5, 3),
+(6, 3),
+(7, 3),
+(8, 3),
+(11, 3),
+(12, 3),
+(13, 3),
+(14, 3),
+(15, 3);
+
