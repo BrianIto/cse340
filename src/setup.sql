@@ -18,10 +18,11 @@ INSERT INTO organization (name, description, contact_email, logo_filename) VALUE
 CREATE TABLE service_project (
     project_id SERIAL PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
-	organization_id SERIAL REFERENCES organization(organization_id),
+	organization_id INTEGER,
 	description TEXT NOT NULL,
 	location TEXT,
-	date TIMESTAMP
+	date TIMESTAMP,
+	FOREIGN KEY (organization_id) REFERENCES organization(organization_id)
 );
 
 SELECT * FROM organization;
@@ -149,14 +150,16 @@ INSERT INTO service_project (
 
 CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
+    name VARCHAR(150) NOT NULL
 );
 
 CREATE TABLE category_project (
-	category_project_id SERIAL PRIMARY KEY,
-	category_id INT REFERENCES category(category_id)
-	project_id INT REFERENCES service_project(project_id)
-)
+	category_id INTEGER,
+	project_id INTEGER,
+	PRIMARY KEY (category_id, project_id),
+	FOREIGN KEY (category_id) REFERENCES category(category_id),
+	FOREIGN KEY (project_id) REFERENCES service_project(project_id)
+);
 
 INSERT INTO category (name) VALUES 
 	('Construction & Infrastructure'), 
