@@ -1,6 +1,6 @@
 -- ========================================
 -- Organization Table
--- ========================================
+-- ==================================o======
 CREATE TABLE organization (
     organization_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
@@ -20,8 +20,8 @@ CREATE TABLE service_project (
     title VARCHAR(150) NOT NULL,
 	organization_id INTEGER,
 	description TEXT NOT NULL,
-	location TEXT,
-	date TIMESTAMP,
+	location TEXT NOT NULL,
+	date TIMESTAMP NOT NULL,
 	FOREIGN KEY (organization_id) REFERENCES organization(organization_id)
 );
 
@@ -150,7 +150,7 @@ INSERT INTO service_project (
 
 CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,
-    name VARCHAR(150) NOT NULL
+    name VARCHAR(150) UNIQUE NOT NULL
 );
 
 CREATE TABLE category_project (
