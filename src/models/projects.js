@@ -19,6 +19,26 @@ const getAllProjects = async () => {
 	return result.rows;
 };
 
+const getProjectsByOrganizationId = async (organizationId) => {
+	const query = `
+        SELECT
+          project_id,
+          organization_id,
+          title,
+          description,
+          location,
+          date
+        FROM project
+        WHERE organization_id = $1
+        ORDER BY date;
+      `;
+
+	const queryParams = [organizationId];
+	const result = await db.query(query, queryParams);
+
+	return result.rows;
+};
+
 /**
  * Get a list of upcoming service projects, limited by the specified number of projects.
  * @param {number} number_of_projects - The maximum number of upcoming projects to retrieve.
@@ -66,4 +86,9 @@ const getProjectDetails = async (project_id) => {
 	return result.rows[0];
 };
 
-export { getAllProjects, getProjectDetails, getUpcomingProjects };
+export {
+	getAllProjects,
+	getProjectsByOrganizationId,
+	getProjectDetails,
+	getUpcomingProjects,
+};
