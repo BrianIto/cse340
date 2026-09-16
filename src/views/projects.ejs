@@ -6,7 +6,7 @@
   <nav>
   <% projects.forEach(project => { %>
     <div class="project-item">
-    <span><%= project.date.getDate() %>/<%= project.date.getMonth() + 1 %>/<%= project.date.getFullYear() %> <%= project.date.getHours() %>h</span> <strong><span><%= project.title %> </span></strong><span>(<%= project.organization_name %>)</span></div>
+    <span><%= project.date.getDate() %>/<%= project.date.getMonth() + 1 %>/<%= project.date.getFullYear() %> <%= project.date.getHours() %>h</span> <strong><a href="/project/<%= project.project_id %>"><%= project.title %> </a></strong><a href="/organization/<%= project.organization_id %>">(<%= project.organization_name %>)</a></div>
     <% }) %>
   </nav>
 </main>

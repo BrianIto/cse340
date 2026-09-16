@@ -104,8 +104,7 @@ INSERT INTO service_project (
     '2026-11-14 08:30:00'
 ),
 (
-    'Winter Harvest Preparation',
-    2,
+    'Winter Harvest Preparation', 2,
     'Prepare community gardens for the winter growing season and distribute harvested produce.',
     'Eastside Urban Farm',
     '2026-12-05 07:30:00'

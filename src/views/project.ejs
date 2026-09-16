@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<main>
+  <h1><%= title %></h1>
+  <h2>Service Project Detail</h2>
+
+	<h3><%= project.title %></h3>
+	<ul>
+	<li><%= project.description %></li>
+	<li>
+<%= project.date.getDate() %>/<%= project.date.getMonth() + 1 %>/<%= project.date.getFullYear() %> <%= project.date.getHours() %>h
+</li>
+
+	<li><%= project.location %></li>
+	<li><a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a></li>
+	</ul>
+</main>
+<%- include('partials/footer') %>

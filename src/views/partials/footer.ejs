@@ -2,6 +2,9 @@
 
   <img class="main-logo" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
         <p>&copy; <%= new Date().getFullYear() %> CSE 340 Service Network.</p>
+	<% if (NODE_ENV === "development") { %>
+		<p>Development mode</p>
+	<% } %>
     </footer>
 </body>
 </html>
