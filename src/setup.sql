@@ -1,6 +1,6 @@
--- ========================================
--- Organization Table
--- ==================================o======
+--Organization Table---
+--*********************---------
+DROP TABLE IF EXISTS organization;
 CREATE TABLE organization (
     organization_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
@@ -8,190 +8,95 @@ CREATE TABLE organization (
     contact_email VARCHAR(255) NOT NULL,
     logo_filename VARCHAR(255) NOT NULL
 );
-
-INSERT INTO organization (name, description, contact_email, logo_filename) VALUES
+ 
+INSERT INTO organization (name, description, contact_email, logo_filename)
+VALUES
 ('BrightFuture Builders', 'A nonprofit focused on improving community infrastructure through sustainable construction projects.', 'info@brightfuturebuilders.org', 'brightfuture-logo.png'),
 ('GreenHarvest Growers', 'An urban farming collective promoting food sustainability and education in local neighborhoods.', 'contact@greenharvest.org', 'greenharvest-logo.png'),
 ('UnityServe Volunteers', 'A volunteer coordination group supporting local charities and service initiatives.', 'hello@unityserve.org', 'unityserve-logo.png');
-
-
-CREATE TABLE service_project (
+ 
+--projects Table---
+--*********************---------
+DROP TABLE IF EXISTS projects;
+CREATE TABLE projects (
     project_id SERIAL PRIMARY KEY,
+    organization_id INTEGER NOT NULL REFERENCES organization(organization_id),
     title VARCHAR(150) NOT NULL,
-	organization_id INTEGER,
-	description TEXT NOT NULL,
-	location TEXT NOT NULL,
-	date TIMESTAMP NOT NULL,
-	FOREIGN KEY (organization_id) REFERENCES organization(organization_id)
+    description TEXT NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    eventDate DATE NOT NULL
 );
-
-SELECT * FROM organization;
-
-SELECT * FROM service_project;
-
-
-INSERT INTO service_project (
-    title,
-    organization_id,
-    description,
-    location,
-    date
-) VALUES
--- BrightFuture Builders (organization_id = 1)
-(
-    'Community Center Renovation',
-    1,
-    'Renovate a local community center to provide a safer and more welcoming space for neighborhood activities.',
-    'Downtown Community Center',
-    '2026-09-20 08:00:00'
-),
-(
-    'Neighborhood Playground Build',
-    1,
-    'Build a new playground with safe and sustainable materials for children in the local community.',
-    'Riverside Park',
-    '2026-10-03 07:30:00'
-),
-(
-    'Affordable Home Repair Day',
-    1,
-    'Assist low-income families with essential home repairs, painting, and accessibility improvements.',
-    'Westside Neighborhood',
-    '2026-10-17 08:00:00'
-),
-(
-    'School Roof Restoration',
-    1,
-    'Repair and restore the roof of a local public school to improve safety and prevent water damage.',
-    'Lincoln Elementary School',
-    '2026-11-07 07:00:00'
-),
-(
-    'Community Ramp Installation',
-    1,
-    'Install accessibility ramps for community buildings to improve access for people with disabilities.',
-    'Northside Community District',
-    '2026-11-21 08:30:00'
-),
-
--- GreenHarvest Growers (organization_id = 2)
-(
-    'Community Garden Planting',
-    2,
-    'Prepare garden beds and plant seasonal vegetables for a neighborhood community garden.',
-    'Greenwood Community Garden',
-    '2026-09-26 07:00:00'
-),
-(
-    'Urban Farming Workshop',
-    2,
-    'Teach residents the basics of urban farming, composting, and sustainable food production.',
-    'GreenHarvest Learning Center',
-    '2026-10-10 09:00:00'
-),
-(
-    'School Vegetable Garden',
-    2,
-    'Create a vegetable garden where students can learn about agriculture, nutrition, and sustainability.',
-    'Jefferson Middle School',
-    '2026-10-24 08:00:00'
-),
-(
-    'Community Composting Day',
-    2,
-    'Build composting stations and educate residents about reducing household organic waste.',
-    'Oakwood Neighborhood',
-    '2026-11-14 08:30:00'
-),
-(
-    'Winter Harvest Preparation', 2,
-    'Prepare community gardens for the winter growing season and distribute harvested produce.',
-    'Eastside Urban Farm',
-    '2026-12-05 07:30:00'
-),
-
--- UnityServe Volunteers (organization_id = 3)
-(
-    'Food Bank Support Day',
-    3,
-    'Help organize, package, and distribute food donations to families in need.',
-    'Central City Food Bank',
-    '2026-09-19 09:00:00'
-),
-(
-    'Park Cleanup Initiative',
-    3,
-    'Clean public spaces, collect litter, and help maintain walking trails throughout the park.',
-    'Liberty Park',
-    '2026-10-04 08:00:00'
-),
-(
-    'Senior Community Assistance',
-    3,
-    'Support elderly residents with household tasks, grocery organization, and community activities.',
-    'Sunrise Senior Center',
-    '2026-10-18 10:00:00'
-),
-(
-    'Charity Donation Sorting',
-    3,
-    'Sort clothing, household goods, and other donated items before distribution to local families.',
-    'UnityServe Distribution Center',
-    '2026-11-08 09:00:00'
-),
-(
-    'Holiday Community Drive',
-    3,
-    'Collect and organize food, toys, and essential supplies for families during the holiday season.',
-    'UnityServe Community Hall',
-    '2026-12-12 08:00:00'
-);
-
+ 
+INSERT INTO projects
+    (organization_id, title, description, location, eventDate)
+VALUES
+    (1, 'Community Park Renovation', 'Help renovate a local community park by improving pathways, benches, and shared spaces.', 'Central Community Park', '2026-09-12'),
+    (1, 'Neighborhood Playground Build', 'Assist with preparing and improving a safe playground area for children and families.', 'Riverside Neighborhood', '2026-09-19'),
+    (1, 'Community Center Ramp Repair', 'Support repairs and improvements to a community center.', '3150 South 800 West', '2026-11-26'),
+    (1, 'Accessible Walkway Project', 'Help construct and improve accessible walkways around a community facility.', 'Westside Community', '2026-11-07'),
+    (1, 'Sustainable Garden Construction', 'Build garden spaces using sustainable materials and community-friendly construction methods.', 'Greenfield Community', '2026-12-10'),
+ 
+    (2, 'Sort Food For Food Bank', 'Pick food from community garden.', 'Happyville Community Garden', '2026-09-19'),
+    (2, 'Community Vegetable Harvest', 'Assist volunteers with harvesting and organizing fresh vegetables for the local community.', 'GreenHarvest Farm', '2026-09-20'),
+    (2, 'Composting Workshop', 'Help prepare a community workshop focused on composting and sustainable food practices.', 'Eastside Community Center', '2026-09-27'),
+    (2, 'School Garden Project', 'Assist students and volunteers with creating and maintaining a school garden.', 'Lincoln Elementary School', '2026-10-04'),
+    (2, 'Food Sustainability Fair', 'Support a community event promoting sustainable food production and healthy gardening practices.', 'City Community Hall', '2026-10-11'),
+ 
+    (3, 'Food Donation Drive', 'Help collect, organize, and distribute donated food to the foodbank.', 'UnityServe Community Center', '2026-09-14'),
+    (3, 'Senior Center Volunteer Day', 'Assist with community activities and facility support at a local senior center.', 'Lakeside Senior Center', '2026-09-21'),
+    (3, 'Community Cleanup Day', 'Join volunteers in cleaning and improving shared public spaces in the community.', 'Southside Neighborhood', '2026-09-28'),
+    (3, 'School Supply Drive', 'Help collect and organize school supplies for students and families who need support.', 'UnityServe Volunteer Center', '2026-10-05'),
+    (3, 'Charity Outreach Event', 'Support volunteers coordinating an outreach event for local community organizations.', 'Central Civic Hall', '2026-10-12');
+ 
+--category Table---
+--*********************---------
+DROP TABLE IF EXISTS category;
 CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,
-    name VARCHAR(150) UNIQUE NOT NULL
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description  TEXT NOT NULL
 );
-
-CREATE TABLE category_project (
-	category_id INTEGER,
-	project_id INTEGER,
-	PRIMARY KEY (category_id, project_id),
-	FOREIGN KEY (category_id) REFERENCES category(category_id),
-	FOREIGN KEY (project_id) REFERENCES service_project(project_id)
+ 
+INSERT INTO category (name, description)
+VALUES
+ ('Environmental',                                                    -- category_id 1
+ 'Cleanups, conservation, and sustainability projects.'),
+('Educational',                                                       -- category_id 2
+ 'Tutoring, literacy programs, and school support.'),
+('Community Service',                                                 -- category_id 3
+ 'Neighborhood improvement and local outreach.'),
+('Health and Wellness',                                               -- category_id 4
+ 'Health fairs, food drives, and wellness education.'),
+('Food Security',                                                     -- category_id 5
+ 'Helping with food banks and Growing and distributing food to households that need it. '),
+('Housing and Infrastructure',                                        -- category_id 6
+ 'Building, repairing, and improving the accessibility of shared spaces and homes.'),
+('Senior Support',                                                    -- category_id 7
+ 'Services, companionship, and practical help for older adults.');
+ 
+--project_category Table---
+--*********************---------
+DROP TABLE IF EXISTS project_category;
+CREATE TABLE project_category (
+    project_id INTEGER NOT NULL REFERENCES projects(project_id),
+    category_id INTEGER NOT NULL REFERENCES category(category_id),
+    PRIMARY KEY (project_id, category_id)
 );
-
-INSERT INTO category (name) VALUES 
-	('Construction & Infrastructure'), 
-	('Environment & Susteinability'), 
-	('Community Support & Outreach');
-
-INSERT INTO category_project (project_id, category_id) VALUES
--- Construction & Infrastructure
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 1),
-(5, 1),
-
--- Environment & Sustainability
-(2, 2),
-(6, 2),
-(7, 2),
-(8, 2),
-(9, 2),
-(10, 2),
-(12, 2),
-
--- Community Support & Outreach
-(1, 3),
-(3, 3),
-(5, 3),
-(6, 3),
-(7, 3),
-(8, 3),
-(11, 3),
-(12, 3),
-(13, 3),
-(14, 3),
-(15, 3);
-
+ 
+INSERT INTO project_category (project_id, category_id)
+VALUES
+    (1, 4),
+    (2, 3),
+    (3, 3),
+    (4, 4),
+    (5, 1),
+    (6, 1),
+    (7, 1),
+    (8, 1),
+    (9, 2),
+    (10, 1),
+    (11, 2),
+    (12, 3),
+    (13, 1),
+    (14, 1),
+    (15, 3);
