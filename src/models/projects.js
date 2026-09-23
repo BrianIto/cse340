@@ -28,7 +28,7 @@ const getProjectsByOrganizationId = async (organizationId) => {
           description,
           location,
           date
-        FROM project
+        FROM service_project
         WHERE organization_id = $1
         ORDER BY date;
       `;

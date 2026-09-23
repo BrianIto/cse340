@@ -9,9 +9,12 @@
 
     <h3>Service Projects</h3>
     <ul>
+    <% if (projects.length === 0) { %>
+        <i>No service projects found for this organization.</i>
+	    <% } else { %>
         <% projects.forEach(project => { %>
             <li><a href="/project/<%= project.project_id %>"><%= project.title %></a></li>
-        <% }) %>
+        <% })} %>
     </ul>
 </main>
 <%- include('partials/footer') %>

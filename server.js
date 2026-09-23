@@ -15,12 +15,15 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
 
+// Express middleware to parse form data from request bodies
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // For handling JSON data from API requests
+
 // Log if dev
 app.use((req, _, next) => {
 	if (NODE_ENV === "development") console.log(`${req.method} ${req.url}`);
 	next();
 });
-
 // Add to the locals so EJS templates can pick up this data;
 app.use((_, res, next) => {
 	res.locals.NODE_ENV = NODE_ENV;
