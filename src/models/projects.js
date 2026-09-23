@@ -19,6 +19,32 @@ const getAllProjects = async () => {
 	return result.rows;
 };
 
+const createProject = async (
+	title,
+	description,
+	location,
+	date,
+	organizationId,
+) => {
+	const query = `
+		INSERT INTO service_project (title, description, location, date, organization_id)
+		VALUES ($1, $2, $3, $4, $5)
+		RETURNING project_id;
+	`;
+	const queryParams = [title, description, location, date, organizationId];
+	const result = await db.query(query, queryParams);
+
+	if (result.rows.length === 0) {
+		throw new Error("Failed to create project");
+	}
+
+	if (process.env.ENABLE_SQL_LOGGING === "true") {
+		console.log("Created new project with ID:", result.rows[0].project_id);
+	}
+
+	return result.rows[0].project_id;
+};
+
 const getProjectsByOrganizationId = async (organizationId) => {
 	const query = `
         SELECT
@@ -68,22 +94,56 @@ const getUpcomingProjects = async (number_of_projects) => {
  * @param {number} project_id - The ID of the service project to retrieve.
  * @returns {Promise<Object>} A promise that resolves to an object containing the service project details.
  */
-const getProjectDetails = async (project_id) => {
+const getProjectDetails = async (projectId) => {
 	const query = `
-	SELECT 
-	service_project.project_id, 
-	service_project.organization_id, 
-	service_project.title, 
-	service_project.location, 
-	service_project.description,
-	service_project.date,
-	organization.name AS organization_name
-	FROM public.service_project
-	JOIN public.organization ON service_project.organization_id = organization.organization_id
-	WHERE service_project.project_id = ${project_id};
+		SELECT
+			service_project.project_id,
+			service_project.organization_id,
+			service_project.title,
+			service_project.location,
+			service_project.description,
+			service_project.date,
+			organization.name AS organization_name
+		FROM public.service_project
+		JOIN public.organization ON service_project.organization_id = organization.organization_id
+		WHERE service_project.project_id = $1;
 	`;
-	const result = await db.query(query);
+	const result = await db.query(query, [projectId]);
 	return result.rows[0];
+};
+
+const updateProject = async (
+	projectId,
+	title,
+	description,
+	location,
+	date,
+	organizationId,
+) => {
+	const query = `
+		UPDATE service_project
+		SET title = $1, description = $2, location = $3, date = $4, organization_id = $5
+		WHERE project_id = $6
+		RETURNING project_id;
+	`;
+	const result = await db.query(query, [
+		title,
+		description,
+		location,
+		date,
+		organizationId,
+		projectId,
+	]);
+
+	if (result.rows.length === 0) {
+		throw new Error("Project not found");
+	}
+
+	if (process.env.ENABLE_SQL_LOGGING === "true") {
+		console.log("Updated project with ID:", projectId);
+	}
+
+	return result.rows[0].project_id;
 };
 
 const getProjectsFromCategory = async (category_id) => {
@@ -108,9 +168,11 @@ const getProjectsFromCategory = async (category_id) => {
 };
 
 export {
+	createProject,
 	getAllProjects,
 	getProjectsByOrganizationId,
 	getProjectDetails,
 	getUpcomingProjects,
 	getProjectsFromCategory,
+	updateProject,
 };
