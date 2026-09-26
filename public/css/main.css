@@ -88,3 +88,28 @@ body {
   background-color: #d1ecf1;
   border-color: #bee5eb;
 }
+
+/* Registered users table */
+table {
+  width: 100%;
+  max-width: 900px;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+th,
+td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #0066cc;
+  color: #fff;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}

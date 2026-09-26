@@ -4,8 +4,10 @@
   <h2>Service Project Detail</h2>
 
 	<h3><%= project.title %></h3>
-	<p><a href="/edit-project/<%= project.project_id %>">Edit Project</a></p>
-	<p><a href="/assign-categories/<%= project.project_id %>">Edit Categories</a></p>
+	<% if (user?.role_name === 'admin') { %>
+		<p><a href="/edit-project/<%= project.project_id %>">Edit Project</a></p>
+		<p><a href="/assign-categories/<%= project.project_id %>">Edit Categories</a></p>
+	<% } %>
 	<ul>
 	<li><%= project.description %></li>
 	<li>

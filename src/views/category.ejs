@@ -3,7 +3,9 @@
 
 <main>
   	<h1><%= title %></h1>
-  <p><a href="/edit-category/<%= category.category_id %>">Edit Category</a></p>
+  <% if (user?.role_name === 'admin') { %>
+    <p><a href="/edit-category/<%= category.category_id %>">Edit Category</a></p>
+  <% } %>
 	<% projects.forEach(project => {%>
 		<h2><%= project.name %></h2>
 		<h3><a href="/project/<%= project.project_id %>"><%= project.title %></a></h3>

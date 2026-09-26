@@ -11,6 +11,11 @@ const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 // Define the port number the server will listen on
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || "default_secret_key";
+
+if (!process.env.SESSION_SECRET && NODE_ENV === "production") {
+	throw new Error("SESSION_SECRET must be set in production");
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -36,7 +41,9 @@ app.use((req, _, next) => {
 	next();
 });
 // Add to the locals so EJS templates can pick up this data;
-app.use((_, res, next) => {
+app.use((req, res, next) => {
+	res.locals.isLoggedIn = Boolean(req.session?.user);
+	res.locals.user = req.session?.user ?? null;
 	res.locals.NODE_ENV = NODE_ENV;
 	next();
 });

@@ -19,7 +19,9 @@ const categoryValidation = [
 		.notEmpty()
 		.withMessage("Category name is required")
 		.isLength({ min: 3, max: 100 })
-		.withMessage("Category name must be between 3 and 100 characters"),
+		.withMessage(
+			"Category name must be between 3 and 100 characters",
+		),
 ];
 
 const showCategoriesPage = async (req, res) => {
@@ -45,7 +47,9 @@ const showNewCategoryForm = (req, res) => {
 const processNewCategoryForm = async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		errors.array().forEach((error) => req.flash("error", error.msg));
+		errors.array().forEach((error) =>
+			req.flash("error", error.msg),
+		);
 		return res.redirect("/new-category");
 	}
 
@@ -74,7 +78,9 @@ const processEditCategoryForm = async (req, res) => {
 	const categoryId = req.params.id;
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		errors.array().forEach((error) => req.flash("error", error.msg));
+		errors.array().forEach((error) =>
+			req.flash("error", error.msg),
+		);
 		return res.redirect(`/edit-category/${categoryId}`);
 	}
 
@@ -91,11 +97,12 @@ const processEditCategoryForm = async (req, res) => {
 
 const showAssignCategoriesForm = async (req, res) => {
 	const projectId = req.params.projectId;
-	const [projectDetails, categories, assignedCategories] = await Promise.all([
-		getProjectDetails(projectId),
-		getAllCategories(),
-		getCategoriesByServiceProjectId(projectId),
-	]);
+	const [projectDetails, categories, assignedCategories] =
+		await Promise.all([
+			getProjectDetails(projectId),
+			getAllCategories(),
+			getCategoriesByServiceProjectId(projectId),
+		]);
 	res.render("assign-categories", {
 		title: "Assign Categories to Project",
 		projectId,
@@ -111,7 +118,16 @@ const processAssignCategoriesForm = async (req, res) => {
 	const categoryIds = Array.isArray(selectedCategoryIds)
 		? selectedCategoryIds
 		: [selectedCategoryIds];
-	await updateCategoryAssignments(projectId, categoryIds);
+	try {
+		await updateCategoryAssignments(projectId, categoryIds);
+	} catch (e) {
+		console.error("Error updating category assignments:", e);
+		req.flash(
+			"error",
+			"There was an error updating category assignments.",
+		);
+		return res.redirect(`/project/${projectId}`);
+	}
 	req.flash("success", "Categories updated successfully.");
 	res.redirect(`/project/${projectId}`);
 };
