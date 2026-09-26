@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { body, validationResult } from "express-validator";
 import { authenticateUser, createUser, getAllUsers } from "../models/users.js";
+import { getProjectsForVolunteer } from "../models/volunteers.js";
 
 const registrationValidation = [
 	body("name")
@@ -119,9 +120,14 @@ const requireRole = (role, unauthorizedRedirect = "/") => (req, res, next) => {
 	next();
 };
 
-const showDashboard = (req, res) => {
-	const { name, email } = req.session.user;
-	res.render("dashboard", { title: "Dashboard", name, email });
+const showDashboard = async (req, res, next) => {
+	try {
+		const { name, email, user_id: userId } = req.session.user;
+		const projects = await getProjectsForVolunteer(userId);
+		res.render("dashboard", { title: "Dashboard", name, email, projects });
+	} catch (error) {
+		next(error);
+	}
 };
 
 const showUsersPage = async (req, res, next) => {

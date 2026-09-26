@@ -1,4 +1,7 @@
 -- Users and roles tables
+DROP TABLE IF EXISTS project_volunteer;
+DROP TABLE IF EXISTS category_project;
+DROP TABLE IF EXISTS service_project;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 
@@ -38,20 +41,19 @@ VALUES
 ('GreenHarvest Growers', 'An urban farming collective promoting food sustainability and education in local neighborhoods.', 'contact@greenharvest.org', 'greenharvest-logo.png'),
 ('UnityServe Volunteers', 'A volunteer coordination group supporting local charities and service initiatives.', 'hello@unityserve.org', 'unityserve-logo.png');
  
---projects Table---
---*********************---------
-DROP TABLE IF EXISTS projects;
-CREATE TABLE projects (
+-- Service projects table
+DROP TABLE IF EXISTS service_project;
+CREATE TABLE service_project (
     project_id SERIAL PRIMARY KEY,
     organization_id INTEGER NOT NULL REFERENCES organization(organization_id),
     title VARCHAR(150) NOT NULL,
     description TEXT NOT NULL,
     location VARCHAR(255) NOT NULL,
-    eventDate DATE NOT NULL
+    date DATE NOT NULL
 );
  
-INSERT INTO projects
-    (organization_id, title, description, location, eventDate)
+INSERT INTO service_project
+    (organization_id, title, description, location, date)
 VALUES
     (1, 'Community Park Renovation', 'Help renovate a local community park by improving pathways, benches, and shared spaces.', 'Central Community Park', '2026-09-12'),
     (1, 'Neighborhood Playground Build', 'Assist with preparing and improving a safe playground area for children and families.', 'Riverside Neighborhood', '2026-09-19'),
@@ -97,16 +99,15 @@ VALUES
 ('Senior Support',                                                    -- category_id 7
  'Services, companionship, and practical help for older adults.');
  
---project_category Table---
---*********************---------
-DROP TABLE IF EXISTS project_category;
-CREATE TABLE project_category (
-    project_id INTEGER NOT NULL REFERENCES projects(project_id),
+-- Project categories table
+DROP TABLE IF EXISTS category_project;
+CREATE TABLE category_project (
+    project_id INTEGER NOT NULL REFERENCES service_project(project_id),
     category_id INTEGER NOT NULL REFERENCES category(category_id),
     PRIMARY KEY (project_id, category_id)
 );
  
-INSERT INTO project_category (project_id, category_id)
+INSERT INTO category_project (project_id, category_id)
 VALUES
     (1, 4),
     (2, 3),
@@ -123,3 +124,10 @@ VALUES
     (13, 1),
     (14, 1),
     (15, 3);
+
+-- Volunteer signups table (many-to-many relationship between users and projects)
+CREATE TABLE project_volunteer (
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    project_id INTEGER NOT NULL REFERENCES service_project(project_id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, project_id)
+);

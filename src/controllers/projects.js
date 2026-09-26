@@ -6,6 +6,11 @@ import {
 	updateProject,
 } from "../models/projects.js";
 import { getAllOrganizations } from "../models/organizations.js";
+import {
+	addVolunteerToProject,
+	isVolunteerForProject,
+	removeVolunteerFromProject,
+} from "../models/volunteers.js";
 import { body, validationResult } from "express-validator";
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -53,7 +58,30 @@ const showProjectDetailsPage = async (req, res, next) => {
 		error.status = 404;
 		return next(error);
 	}
-	res.render("project", { title: project.title, project });
+	const isVolunteer = req.session.user
+		? await isVolunteerForProject(req.session.user.user_id, project.project_id)
+		: false;
+	res.render("project", { title: project.title, project, isVolunteer });
+};
+
+const addProjectVolunteer = async (req, res, next) => {
+	try {
+		await addVolunteerToProject(req.session.user.user_id, req.params.id);
+		req.flash("success", "You are now volunteering for this project.");
+		res.redirect(`/project/${req.params.id}`);
+	} catch (error) {
+		next(error);
+	}
+};
+
+const removeProjectVolunteer = async (req, res, next) => {
+	try {
+		await removeVolunteerFromProject(req.session.user.user_id, req.params.id);
+		req.flash("success", "You are no longer volunteering for this project.");
+		res.redirect(req.body.returnTo === "/dashboard" ? "/dashboard" : `/project/${req.params.id}`);
+	} catch (error) {
+		next(error);
+	}
 };
 
 const showNewProjectForm = async (req, res) => {
@@ -128,6 +156,8 @@ export {
 	projectValidation,
 	showProjectsPage,
 	showProjectDetailsPage,
+	addProjectVolunteer,
+	removeProjectVolunteer,
 	showNewProjectForm,
 	processNewProjectForm,
 	showEditProjectForm,

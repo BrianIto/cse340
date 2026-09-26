@@ -12,9 +12,11 @@ import {
 	showOrganizationsPage,
 } from "./controllers/organizations.js";
 import {
+	addProjectVolunteer,
 	processEditProjectForm,
 	processNewProjectForm,
 	projectValidation,
+	removeProjectVolunteer,
 	showEditProjectForm,
 	showNewProjectForm,
 	showProjectDetailsPage,
@@ -60,6 +62,8 @@ router.get("/organizations", showOrganizationsPage);
 router.get("/organization/:id", showOrganizationDetailsPage);
 router.get("/projects", showProjectsPage);
 router.get("/project/:id", showProjectDetailsPage);
+router.post("/project/:id/volunteer", requireLogin, addProjectVolunteer);
+router.post("/project/:id/remove-volunteer", requireLogin, removeProjectVolunteer);
 router.get("/edit-project/:id", requireRole("admin"), showEditProjectForm);
 router.post(
 	"/edit-project/:id",
