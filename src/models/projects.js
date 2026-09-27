@@ -79,9 +79,29 @@ const getUpcomingProjects = async (number_of_projects) => {
 	service_project.location, 
 	service_project.description,
 	service_project.date,
-	organization.name AS organization_name
+	organization.name AS organization_name,
+	COALESCE(
+		json_agg(
+			json_build_object(
+				'category_id', category.category_id,
+				'name', category.name
+			)
+			ORDER BY category.name
+		) FILTER (WHERE category.category_id IS NOT NULL),
+		'[]'::json
+	) AS categories
 	FROM public.service_project
 	JOIN public.organization ON service_project.organization_id = organization.organization_id
+	LEFT JOIN public.category_project ON service_project.project_id = category_project.project_id
+	LEFT JOIN public.category ON category_project.category_id = category.category_id
+	GROUP BY
+		service_project.project_id,
+		service_project.organization_id,
+		service_project.title,
+		service_project.location,
+		service_project.description,
+		service_project.date,
+		organization.name
 	ORDER BY service_project.date ASC
 	LIMIT ${number_of_projects};
 	`;
